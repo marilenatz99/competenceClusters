@@ -6,7 +6,7 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="stylesheet" type="text/css" href="Style0.css" />
+		<link rel="stylesheet" type="text/css" href="../assets/css/Style0.css" />
 		<link href="//netdna.bootstrapcdn.com/font-awesome/5.15.4/css/font-awesome.css" rel="stylesheet">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.3.4/gsap.min.js"></script>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
@@ -934,7 +934,7 @@
 
 	</head>
 	<body>
-		<div w3-include-html="navbar.html"></div>
+		<div w3-include-html="../htmlFiles/navbar.html"></div>
 
 		<section class="elementor-section elementor-top-section elementor-element elementor-element-3199897 elementor-hidden-desktop elementor-hidden-mobile elementor-section-boxed elementor-section-height-default elementor-section-height-default">
 			<div class="elementor-container elementor-column-gap-custom">
@@ -957,9 +957,9 @@
                 </div>
             </div>
 		</section>
-		<script src="Re-script.js"></script>
+		<!-- <script src="Re-script.js"></script> -->
 
-		<div w3-include-html="footer.html"></div>
+		<div w3-include-html="../htmlFiles/footer.html"></div>
 		<script>includeHTML();</script>
 
 		
