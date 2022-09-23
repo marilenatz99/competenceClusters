@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<script src="https://d3js.org/d3.v6.min.js"></script>
+<script src="d3-scale-chromatic.v0.0.js"></script>
+<body>
+<script>
+    d3_scale_chromatic.schemes.forEach(function(scheme) {
+        var sch = scheme.replace(/scheme/, '');
+        
+        d3.select('body').append('h4').text('d3.'+scheme);
+        d3.select('body').append('div').text('Returns the '+sch+' color scheme with n colors; n must be in the range ['+ d3_scale_chromatic[scheme].range() + '].')
+    });
+</script>
+</body>
+</html>
