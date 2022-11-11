@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<?php include_once 'phpFiles/db.php'; ?>
+<?php include_once './phpFiles/db.php'; ?>
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="stylesheet" type="text/css" href="assets/css/Style0.css" />
+		<link rel="stylesheet" type="text/css" href="./assets/css/Style0.css" />
 		<link href="//netdna.bootstrapcdn.com/font-awesome/5.15.4/css/font-awesome.css" rel="stylesheet">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.3.4/gsap.min.js"></script>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
@@ -927,12 +927,9 @@
 			}
 			};
 		</script>
-
-
-
 	</head>
 	<body>
-		<div w3-include-html="htmlFiles/navbar.html"></div>
+		<div w3-include-html="./htmlFiles/navbar.html"></div>
 
 		<section class="elementor-section elementor-top-section elementor-element elementor-element-3199897 elementor-hidden-desktop elementor-hidden-mobile elementor-section-boxed elementor-section-height-default elementor-section-height-default">
 			<div class="elementor-container elementor-column-gap-custom">
@@ -943,7 +940,7 @@
 						</div>
 					</div>
 					<div id="info" class="col right">
-						<div class="row" style="padding: 15px;">
+						<!-- <div class="row" style="padding: 15px;">
 							<span class="elementor-button-content-wrapper">
 								<span class="elementor-button-text">Visualization mode:</span>
 							</span> 
@@ -957,12 +954,12 @@
 									<span class="elementor-button-text">Long names</span>
 								</span>
 							</button>
-						</div>
+						</div> -->
 
 						<div class="elementor-search-form container">
 							<div class="row" style="margin-bottom: 5px;">
 								<div class="elementor-search-form__container" style="max-width: fit-content;">
-									<input id="search" placeholder="Search..." class="elementor-search-form__input search_input" type="search" onchange="searchF()" onfocusin="print(event)" onfocusout="print(event)" style="padding-left: calc(31px / 3); padding-right: calc(31px / 3);" autocomplete="off" />
+									<input id="search" placeholder="Search..." class="elementor-search-form__input search_input" type="search" onchange="searchF(this.value)" onfocusin="print(event)" onfocusout="print(event)" style="padding-left: calc(31px / 3); padding-right: calc(31px / 3);" autocomplete="off" />
 									<button class="elementor-search-form__submit" type="submit" title="Search" aria-label="Search">
 										<i aria-hidden="true" class="fas fa-search"></i>							
 										<span class="elementor-screen-only menu-item-has-children">Search</span>
@@ -973,7 +970,7 @@
 								</div>
 							</div>
 							<div class="row">
-								<a id="ApplyToCourse" href="Second_page/redirect.php" class="site-button isDisabled" role="button" >
+								<a id="ApplyToCourse" href="#" class="site-button isDisabled" role="button" >
 									<span class="elementor-button-content-wrapper">
 										<span class="elementor-button-text">Apply to Course</span>
 									</span>
@@ -1000,61 +997,42 @@
 								<h5>Description:</h5>
 								<p></p>
 							</div>
+							<div class="superclusters" style="display: none;">
+								<h5>Superclusters:</h5>
+								<ul class="row sub-menu elementor-nav-menu--dropdown sm-nowrap" role="group" aria-hidden="true" aria-labelledby="sm-1661278952377895-3" aria-expanded="false" style="width: auto; display: inline; top: auto; left: 0px; margin-left: 0px; margin-top: 0px; min-width: 10em; max-width: 1000px; background-color: transparent;"></ul>
+							</div>
 							<div class="subclusters">
 								<h5>Subclusters:</h5>
 								<ul class="row sub-menu elementor-nav-menu--dropdown sm-nowrap" role="group" aria-hidden="true" aria-labelledby="sm-1661278952377895-3" aria-expanded="false" style="width: auto; display: inline; top: auto; left: 0px; margin-left: 0px; margin-top: 0px; min-width: 10em; max-width: 1000px;"></ul>
 							</div>
-							<div class="skills" style="display: none;">
-								<h5>Skills:</h5>
-								<p></p>
-							</div>
-							<div class="teachers" style="display: none;">
-								<h5>Teachers:</h5>
-								<p></p>
-							</div>
+							<div id="skills" style="display: none;">
+								<div class="subjects" >
+									<h6>Subjects: <ul></ul></h6>
+									<p></p>
+								</div>
+								<div class="learning_objectives" >
+									<h6>Learning Objectives: <ul></ul></h6>
+									<p></p>
+								</div>
+								<div class="ects" >
+									<h6>ECTS: <span></span></h6>
+									<p></p>
+								</div>
+								<div class="total_work_hours" >
+									<h6>Working Hours: <span></span></h6>
+									<p></p>
+								</div>
+							</div>	
 						</div>
 					</div>
 				</div>
 			</div>
 		</section>
+		<!-- <script src="Script8.js"></script> -->
+		<?php include './phpFiles/getData.php'; ?> 
 
-		<!-- Gets data from Excel -->
-		<script src="DataFromExcel.js"></script>
-
-		<div w3-include-html="htmlFiles/footer.html"></div>
+		<div w3-include-html="./htmlFiles/footer.html"></div>
 		<script>includeHTML();</script>
-
-		<?php
-// Gets data from database, still in progress
-//include_once 'getData.php';
-?>
-
-		<script>
-			function searchF() {
-				var input, filter, ul, li, a, i, searchChildren;
-				input = document.getElementById("search");
-				filter = input.value.toUpperCase();
-				searchChildren = document.getElementById("searchChildren");
-				ul = document.getElementById("searchItems");
-				li = ul.getElementsByTagName("li");
-				for (i = 0; i < li.length; i++) {
-					a = li[i].getElementsByTagName("button")[0];
-					if (a.innerHTML.toUpperCase().indexOf(filter) > -1) 
-						li[i].style.display = "";
-					else 
-						li[i].style.display = "none";
-				}
-				searchChildren.style.display = "inline";
-			}
-
-			function print(event){
-				event.type != 'click' ? 
-					document.getElementById("searchChildren").style.display = 'inline'
-				:
-					document.getElementById("searchChildren").style.display = 'none';
-					
-			}
-		</script>
 		
 	</body>
 </html>
