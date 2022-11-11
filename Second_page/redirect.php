@@ -1,12 +1,10 @@
 <!DOCTYPE html>
-<?php session_start();
-// echo $_SESSION['course_info'];
-?>
+<?php include './db.php'?>
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="stylesheet" type="text/css" href="../assets/css/Style0.css" />
+		<link rel="stylesheet" type="text/css" href="Style0.css" />
 		<link href="//netdna.bootstrapcdn.com/font-awesome/5.15.4/css/font-awesome.css" rel="stylesheet">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.3.4/gsap.min.js"></script>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
@@ -934,7 +932,7 @@
 
 	</head>
 	<body>
-		<div w3-include-html="../htmlFiles/navbar.html"></div>
+		<div w3-include-html="navbar.html"></div>
 
 		<section class="elementor-section elementor-top-section elementor-element elementor-element-3199897 elementor-hidden-desktop elementor-hidden-mobile elementor-section-boxed elementor-section-height-default elementor-section-height-default">
 			<div class="elementor-container elementor-column-gap-custom">
@@ -957,27 +955,38 @@
                 </div>
             </div>
 		</section>
-		<!-- <script src="Re-script.js"></script> -->
+		<script src="Re-script.js"></script>
 
-		<div w3-include-html="../htmlFiles/footer.html"></div>
+		<div w3-include-html="footer.html"></div>
 		<script>includeHTML();</script>
 
+<script>		
+		<?php 
+			$courseId = $_GET["courseId"]; 
+			$query = mysqli_query($db, 'SELECT * from scu where scu.id = ' .$courseId );
+			
+			if ($query->num_rows > 0) {
+				while ($row = mysqli_fetch_object($query)) {
+					if (!$row->short_name) {
+						$words = preg_split('/[\s,_-]+/', $row->long_name);
+						foreach ($words as $w) {
+							$row->short_name .= mb_substr($w, 0, 1);
+						}
+					}
+		?>					
 		
-
-		<script>
-            var infoValue = JSON.parse(localStorage.getItem('info'));
-            console.log(infoValue); 
-
-            document.querySelector("#Re-cluster").innerHTML = infoValue.parent.data.name + " (" + infoValue.parent.parent.data.name + ")";
-            document.querySelector(".Re-course h4").innerHTML = "[" + getFirstLetters(infoValue.data.name) + "] " + infoValue.data.name;
-            document.querySelector(".Re-course-desc p").innerHTML = '';
-
-            function getFirstLetters(str) {
-                if (str === undefined) str = '';
-                const firstLetters = str.slice(0, str.indexOf('(')).split(' ').map(word => word[0]).join('');
-                return firstLetters;
-            }
-		</script>
+			// parent details : document.querySelector("#Re-cluster").innerHTML = <?php //echo $row->long_name; ?> + " (" + $row->short_name + ")";
+			document.querySelector(".Re-course h4").innerHTML = <?php echo '"[' . $row->short_name . '] ' . $row->long_name . '"'; ?>;
+			document.querySelector(".Re-course-desc p").innerHTML = '';
+			
+			<?php
+				}
+			}
+			else {
+				echo 'No courses found';
+			}
+		?>
+</script>
 		
 	</body>
 </html>

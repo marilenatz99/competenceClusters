@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3325
--- Generation Time: Sep 13, 2022 at 10:32 AM
+-- Generation Time: Nov 10, 2022 at 06:01 PM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -74,11 +74,13 @@ CREATE TABLE `cluster` (
 --
 
 INSERT INTO `cluster` (`id`, `parent_clusterid`, `long_name`, `short_name`, `description`) VALUES
-(1, NULL, 'Competence Clusters', 'CC', ''),
+(1, NULL, 'Competence Clusters', 'CC', 'Root cluster'),
 (2, 1, 'Network', 'N', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer eget lacinia mi. Morbi magna quam, ultricies nec aliquam vel, dignissim sagittis nibh.'),
 (3, 2, 'CyberSecurity', 'CybSec', 'Curabitur sed euismod felis, at accumsan ante. Nunc lacinia magna non magna vulputate, nec elementum nunc condimentum.- Cybersecurity'),
 (4, 1, 'Bussiness', NULL, 'Proin pretium diam sit amet mi iaculis, eu tincidunt dolor lobortis. - Bussiness'),
-(5, 2, 'Microwaves, Antennas and Electromagnetic Application', 'M,A&EA', 'Donec nec lectus lorem. In egestas nulla quis tristique eleifend. Integer ex ligula, sollicitudin et commodo at, rutrum at tortor. - Microwaves, Antennas and Electromagnetic Application');
+(5, 2, 'Microwaves, Antennas and Electromagnetic Application', 'M,A&EA', 'Donec nec lectus lorem. In egestas nulla quis tristique eleifend. Integer ex ligula, sollicitudin et commodo at, rutrum at tortor. - Microwaves, Antennas and Electromagnetic Application'),
+(6, 1, 'Creativity', 'Creat', ''),
+(7, 4, 'Entrepreneurship and innovation', NULL, '');
 
 -- --------------------------------------------------------
 
@@ -311,7 +313,8 @@ CREATE TABLE `scu` (
 INSERT INTO `scu` (`id`, `clusterid`, `modeid`, `granularityid`, `pedagogical_approachid`, `long_name`, `short_name`, `description`, `ects`, `total_work_hours`, `auto_study_hours`, `sync_teaching_hours`, `async_teaching_hours`, `theory_hours`, `practice_hours`, `work_based_hours`, `interactive_activity_hours`, `non_interactive_activity_hours`, `degree`) VALUES
 (1, 3, 3, 1, 5, 'Information System Security and Information System Technology and Ecommerce', 'ISS&IST&E', 'Praesent molestie at eros non gravida. Duis ac eros auctor, facilisis quam in, porta massa. Donec ac ligula finibus, euismod odio id, tempus diam. - Information System Security and Information System Technology and Ecommerce', 3, 60, NULL, NULL, NULL, 3, 0, NULL, NULL, NULL, NULL),
 (2, 5, 1, 2, 7, 'Antennas and Wireless Communication', NULL, 'Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Vivamus hendrerit at eros nec tempor. - Antennas and Wireless Communication', 4, 80, NULL, NULL, NULL, 2, 2, NULL, NULL, NULL, NULL),
-(3, 5, 1, 1, 1, 'Defense Technologies & Electromagnetic Compatibility', 'DT&EC', 'In faucibus nibh vel mi consequat, non bibendum neque fringilla. Nulla porttitor ante vitae lectus tincidunt placerat.  - Defense Technologies & Electromagnetic Compatibility', 5, 125, NULL, NULL, NULL, 3, 2, NULL, NULL, NULL, NULL);
+(3, 5, 1, 1, 1, 'Defense Technologies & Electromagnetic Compatibility', 'DT&EC', 'In faucibus nibh vel mi consequat, non bibendum neque fringilla. Nulla porttitor ante vitae lectus tincidunt placerat.  - Defense Technologies & Electromagnetic Compatibility', 5, 125, NULL, NULL, NULL, 3, 2, NULL, NULL, NULL, NULL),
+(4, 7, 1, 2, 9, 'Entrepreneurship and innovation', NULL, NULL, 5, 40, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -393,6 +396,20 @@ CREATE TABLE `skill_competence` (
   `id` int(10) NOT NULL,
   `name` int(10) NOT NULL,
   `taxonomy_subject_skillid` int(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `students`
+--
+
+CREATE TABLE `students` (
+  `student_id` int(255) NOT NULL,
+  `first_name` varchar(255) NOT NULL,
+  `last_name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `course` longtext NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -609,6 +626,12 @@ ALTER TABLE `skill_competence`
   ADD KEY `FKskill_comp257265` (`taxonomy_subject_skillid`);
 
 --
+-- Indexes for table `students`
+--
+ALTER TABLE `students`
+  ADD PRIMARY KEY (`student_id`);
+
+--
 -- Indexes for table `subject`
 --
 ALTER TABLE `subject`
@@ -655,7 +678,7 @@ ALTER TABLE `availability`
 -- AUTO_INCREMENT for table `cluster`
 --
 ALTER TABLE `cluster`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `content_type`
@@ -721,13 +744,19 @@ ALTER TABLE `pre-requisite`
 -- AUTO_INCREMENT for table `scu`
 --
 ALTER TABLE `scu`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `skill_competence`
 --
 ALTER TABLE `skill_competence`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `students`
+--
+ALTER TABLE `students`
+  MODIFY `student_id` int(255) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `subject`
