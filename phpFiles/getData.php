@@ -1,8 +1,10 @@
 <script>
     const svgContainer = document.querySelector("#svgContainer");
+    const superclustDiv = document.querySelector(".superclusters");
     const subclustDiv = document.querySelector(".subclusters");
     const titleP = document.querySelector("#title");
     const descrP = document.querySelector(".desc p");
+    const superclustP = document.querySelector(".superclusters ul");
     const subclustP = document.querySelector(".subclusters ul");
     const skillsDiv = document.querySelector("#skills");
     const full_names = document.querySelector("#full");
@@ -43,9 +45,8 @@
 
 
         // Setting information on landing
-        while (subclustP.firstChild) {
-            subclustP.removeChild(subclustP.lastChild);
-        }
+        superclustP.innerHTML = '';
+        subclustP.innerHTML = '';
 
         // Display root cluster title
         titleP.innerHTML = '[' + root.short_name + '] ' + root.long_name;
@@ -56,8 +57,8 @@
         var link = document.createElement('a');
         link.href = '#';
         var img = document.createElement('img');
-        img.src = 'close.png';
-        link.innerHTML = 'Cancel';
+        img.src = '../assets/icons/close.png';
+        link.innerHTML = 'Cancel ';
         link.appendChild(img);
         link.addEventListener("click", () => {
             searchChildren.style.display = 'none';
@@ -75,7 +76,8 @@
             var li1 = lists(element);
             var li2 = lists(element);
             subclustP.appendChild(li1);
-            ul.appendChild(li2);   
+            ul.appendChild(li2); 
+
         }
 
 
@@ -241,13 +243,11 @@
                 }
                 else {
                     this.style.display = "none";
-                    console.log('mphke3', focus);
                     displayButtons();
                 }
 
                 if (d.parent === focus) {
                     this.style.display = "inline";
-                    console.log('mphke4', focus);
                     displayButtons();
                 }
             });
@@ -279,6 +279,7 @@
     }
 
     function displayInfo(data) {
+        superclustP.innerHTML = '',
         subclustP.innerHTML = '';
         // check if it is course
         data.height != 0 ? // if not display subclusters and hide skills
@@ -296,8 +297,51 @@
                 skillsDiv.style.display = 'inline',
                 fillFields(data.data)
             );
+        // check if it is root
+        data.depth != 0 ?
+            (        
+                superclustDiv.style.display = 'inline',
+                repeat(data)
+            ) 
+            :
+            (
+                superclustDiv.style.display = 'none'
+            ) ;
         titleP.innerHTML = '[' + data.data.short_name + '] ' + data.data.long_name;
         descrP.innerHTML = data.data.description;
+
+        // get superclusters as parent field
+        function repeat(data) {
+            console.log(data);
+            var height = data.depth;
+            var parentObj = data.parent;
+            var parentArray = [];
+            while (height > 0) {
+                parentArray.push(parentObj.data.long_name);
+                parentObj = parentObj.parent;
+                height--;
+            }
+            
+            // Change the way that 'superclusters' appear
+            for (var index = parentArray.length - 1; index > -1; index--) {                
+                var link = document.createElement('a');
+                link.href = '#';
+                link.innerHTML = (index == 0) ? parentArray[index] : parentArray[index] + '>';
+                link.addEventListener("click", (e) => {
+                    var name = e.target.text.replace(/[^a-zA-Z0-9 ]/g, '');
+                    var result = fullObj.find(item =>item.data.long_name === name)
+                    if (result) {
+                        zoom(result);
+                        searchChildren.style.display = "none";
+                        displayInfo(result);
+                    }
+                });
+                link.className = '';
+                link.style = "text-decoration: none;";
+                superclustP.append(link);
+                superclustDiv.style = 'margin-bottom: 20px';
+            }
+        }
     }
 
 
@@ -325,16 +369,69 @@
 
     // Fills the course fields on landing page
     function fillFields (index) {
-        for (var key in skillsDiv.children) 
-            if(containsNumbers(key)) {
+        
+        for (var key in skillsDiv.children) {
                 var field = skillsDiv.children[key].className;
-                skillsDiv.children[key].children[0].children[0].innerHTML = index[field]; // the field of the index corresponding to the class of the div
-            }
+                if (skillsDiv.children[key].className == 'subjects') {
+                    skillsDiv.children[key].children[0].children[0].innerHTML = '';
+                    <?php
+                    // Get clusters from database
+                    $query1 = mysqli_query($db, 'SELECT us.scuid, s.name
+                                                from `subject` s, `scu` u, `scu_subject` us
+                                                where u.id = us.scuid
+                                                and s.id = us.subjectid
+                                                order by us.class_time + us.autonomous_time desc');
 
-        // Gets only the numbers of the key
-        function containsNumbers(str) {
-            return /\d/.test(str);
+                    if ($query1->num_rows > 0) {
+                        while ($row = mysqli_fetch_object($query1)) { ?>
+                            if (index['id'] === <?php echo '"'.$row->scuid.'"'; ?>) {
+                                var li = document.createElement('li');
+                                li.innerHTML = <?php echo '"'.$row->name.'"'; ?>;
+                                li.style = "list-style: none;";
+                                skillsDiv.children[key].children[0].children[0].append(li); // the field of the index corresponding to the class of the div
+                            }
+                        <?php
+                        }
+                    } else { ?>
+                        console.log('No subjects were found...');
+                        <?php
+                    }
+                    ?>
+                }
+                else if (skillsDiv.children[key].className == 'learning_objectives') {
+                    skillsDiv.children[key].children[0].children[0].innerHTML = '';
+                    <?php
+                    // Get clusters from database
+                    $query1 = mysqli_query($db, 'SELECT u.id, lo.description
+                                                from scu u, learning_outcome lo
+                                                where lo.scuid = u.id
+                                                order by lo.description');
+
+                    if ($query1->num_rows > 0) {
+                        while ($row = mysqli_fetch_object($query1)) { ?>
+                            if (index['id'] === <?php echo '"'.$row->id.'"'; ?>) {
+                                var li = document.createElement('li');
+                                li.innerHTML = <?php echo '"'.$row->description.'"'; ?>;
+                                li.style = "list-style: none;";
+                                skillsDiv.children[key].children[0].children[0].append(li); // the field of the index corresponding to the class of the div
+                            }                        
+                        <?php
+                        }
+                    } else { ?>
+                        console.log('No learning objectives were found...');
+                        <?php
+                    }
+                    ?>
+                }
+                else if (skillsDiv.children[key].className == 'ects') {
+                    skillsDiv.children[key].children[0].children[0].innerHTML = index[field]; // the field of the index corresponding to the class of the div
+                }
+                else if (skillsDiv.children[key].className == 'total_work_hours') {
+                    skillsDiv.children[key].children[0].children[0].innerHTML = index[field]; // the field of the index corresponding to the class of the div
+                }
         }
+
+
     }
 
     function searchF(data) {
